@@ -6,11 +6,11 @@ import static java.util.Arrays.asList;
 public class ReorderTest {
    @Test
    public void moveToSamePositionDoesNothing() {
-      assertThat(Reorder.move(asList(1, 2), 0, 0, 0), equalTo(asList(1, 2)));
+      assertThat(Reorder.move(asList(1, 2), new Range(0, 0), 0), equalTo(asList(1, 2)));
    }
 
    @Test
    public void moveOneToPriorPositionSwapsElements() {
-      assertThat(Reorder.move(asList(1, 2), 1, 1, 0), equalTo(asList(2, 1)));
+      assertThat(Reorder.move(asList(1, 2), new Range(1, 1), 0), equalTo(asList(2, 1)));
    }
 }
