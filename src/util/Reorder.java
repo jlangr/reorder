@@ -3,9 +3,13 @@ package util;
 import java.util.*;
 
 public class Reorder {
-   public static List<Integer> move(List<Integer> input, Range range, int position) {
-      if (range.end + 1 > input.size())
+   public static void throwIfInvalidInput(List<Integer> input, Range range, int position) {
+      if (range.end + 1 > input.size() || position > input.size())
          throw new IllegalArgumentException();
+   }
+
+   public static List<Integer> move(List<Integer> input, Range range, int position) {
+      throwIfInvalidInput(input, range, position);
 
       List<Integer> rangeToMove = input.subList(range.start, range.end + 1);
 

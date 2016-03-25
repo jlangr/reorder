@@ -46,4 +46,9 @@ public class Reorder_MoveTest {
    public void canInsertAfterLastPosition() {
       assertThat(move(asList(10, 20, 30), new Range(0, 1), 3), equalTo(asList(30, 10, 20)));
    }
+
+   @Test(expected=IllegalArgumentException.class)
+   public void throwWhenPositionPastListSize() {
+      move(asList(10, 20, 30), new Range(0, 1), 4);
+   }
 }
