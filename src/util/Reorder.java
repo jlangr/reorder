@@ -1,3 +1,5 @@
+package util;
+
 import java.util.*;
 
 public class Reorder {
@@ -25,5 +27,4 @@ public class Reorder {
       newList.addAll(list.subList(range.end + 1, list.size()));
       return newList;
    }
-
 }
