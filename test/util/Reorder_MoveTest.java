@@ -36,4 +36,9 @@ public class Reorder_MoveTest {
    public void moveSomeToLaterPosition() {
       assertThat(move(asList(10, 20, 30, 40), new Range(0, 1), 3), equalTo(asList(30, 10, 20, 40)));
    }
+
+   @Test(expected=IllegalArgumentException.class)
+   public void throwWhenRangeEndsPastListSize() {
+      move(asList(10), new Range(0, 1), 0);
+   }
 }
