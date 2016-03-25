@@ -8,19 +8,12 @@ public class Reorder {
 
       List<Integer> results = new ArrayList<>(input);
       if (position < range.start) {
-         results = remove(results, range);
+         results = range.removeFrom(results);
          results.addAll(position, rangeToMove);
       } else {
          results.addAll(position, rangeToMove);
-         results = remove(results, range);
+         results = range.removeFrom(results);
       }
       return results;
-   }
-
-   private static List<Integer> remove(List<Integer> list, Range range) {
-      List<Integer> newList = new ArrayList<>();
-      newList.addAll(list.subList(0, range.start));
-      newList.addAll(list.subList(range.end + 1, list.size()));
-      return newList;
    }
 }
