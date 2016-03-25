@@ -4,8 +4,10 @@ import java.util.*;
 
 public class Reorder {
    public static void throwIfInvalidInput(List<Integer> input, Range range, int position) {
-      if (range.end + 1 > input.size() || position > input.size())
-         throw new IllegalArgumentException();
+      if (range.end + 1 > input.size())
+         throw new IllegalArgumentException("range end out of bounds");
+      if (position > input.size())
+         throw new IllegalArgumentException("position out of bounds");
    }
 
    public static List<Integer> move(List<Integer> input, Range range, int position) {
