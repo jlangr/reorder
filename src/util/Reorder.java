@@ -6,17 +6,15 @@ public class Reorder {
    public static List<Integer> move(List<Integer> input, Range range, int position) {
       if (position == range.start) return input;
 
-      int toMove = input.get(range.start);
+      List<Integer> rangeToMove = input.subList(range.start, range.end + 1);
 
       List<Integer> results = new ArrayList<>(input);
       if (position < range.start) {
-         List<Integer> rangeToMove = input.subList(range.start, range.end + 1);
          results = remove(results, range);
          results.addAll(position, rangeToMove);
-      }
-      else {
-         results.add(position, toMove);
-         results.remove(range.start);
+      } else {
+         results.addAll(position, rangeToMove);
+         results = remove(results, range);
       }
       return results;
    }
