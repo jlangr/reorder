@@ -13,4 +13,9 @@ public class ReorderTest {
    public void moveOneToPriorPositionSwapsElements() {
       assertThat(Reorder.move(asList(1, 2), new Range(1, 1), 0), equalTo(asList(2, 1)));
    }
+
+   @Test
+   public void moveOneToEarlierPosition() {
+      assertThat(Reorder.move(asList(10, 20, 30, 40), new Range(3, 3), 1), equalTo(asList(10, 40, 20, 30)));
+   }
 }

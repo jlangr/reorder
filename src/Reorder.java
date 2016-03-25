@@ -5,9 +5,9 @@ public class Reorder {
       if (range.start == position)
          return input;
 
-      List<Integer> results = new ArrayList<>();
-      results.add(input.get(1));
-      results.add(input.get(0));
+      List<Integer> results = new ArrayList<>(input);
+      int element = results.remove(range.start);
+      results.add(position, element);
       return results;
    }
 
