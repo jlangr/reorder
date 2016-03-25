@@ -4,8 +4,6 @@ import java.util.*;
 
 public class Reorder {
    public static List<Integer> move(List<Integer> input, Range range, int position) {
-      if (position == range.start) return input;
-
       List<Integer> rangeToMove = input.subList(range.start, range.end + 1);
 
       List<Integer> results = new ArrayList<>(input);
