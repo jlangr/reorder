@@ -23,4 +23,11 @@ public class ReorderTest {
    public void moveOneToLaterPosition() {
       assertThat(Reorder.move(asList(10, 20, 30, 40), new Range(1, 1), 3), equalTo(asList(10, 30, 20, 40)));
    }
+
+   // TODO get rid of "Reorder" and rename class
+
+   @Test
+   public void moveSomeToEarlierPosition() {
+      assertThat(Reorder.move(asList(10, 20, 30, 40), new Range(2, 3), 0), equalTo(asList(30, 40, 10, 20)));
+   }
 }
