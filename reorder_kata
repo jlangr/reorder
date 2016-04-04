@@ -259,6 +259,155 @@ Now both legs of the `if` statement require a `rangeToMove`, so we move that sta
 
 v10.
 
-We wonder if that guard clause in `move`--which returns early if the position-to-move-to is the same as the start of the range to move--is really necessary. We try eliminating it and discover that indeed all our tests still pass (particularly `moveToSamePositionDoesNOthing`).
+We wonder if that guard clause in `move`--which returns early if the position-to-move-to is the same as the start of the range to move--is really necessary. We try eliminating it and discover that indeed all our tests still pass (particularly `moveToSamePositionDoesNothing`).
 
 
+v11.
+
+The beauty of creating abstractions like Range is that we find out often that code can start living there.
+
+We wanted an easy way of removing a range from a List, but Java didn't provide it directly. If we can't send the message `remove` to a list object, perhaps we can send the message `removeFrom` to a range object and pass a list as an argument--thus, "remove this range from a list."
+
+
+   public static List<Integer> move(List<Integer> input, Range range, int position) {
+      List<Integer> rangeToMove = input.subList(range.start, range.end + 1);
+
+      List<Integer> results = new ArrayList<>(input);
+      if (position < range.start) {
+         results = range.removeFrom(results);
+         results.addAll(position, rangeToMove);
+      } else {
+         results.addAll(position, rangeToMove);
+         results = range.removeFrom(results);
+      }
+      return results;
+   }
+
+
+public class Range {
+   // ...
+   public List<Integer> removeFrom(List<Integer> list) {
+      List<Integer> newList = new ArrayList<>();
+      newList.addAll(list.subList(0, start));
+      newList.addAll(list.subList(end + 1, list.size()));
+      return newList;
+   }
+}
+
+v12.
+
+We've taken a private behavior and made it a public behavior defined on the Range class. In order for other developers to be able to rapidly understand and consume--reuse--our newly public ability, we add a couple tests to document its behavior:
+
+package util;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
+import static java.util.Collections.EMPTY_LIST;
+import org.junit.Test;
+import static java.util.Arrays.asList;
+
+public class RangeTest {
+   @Test
+   public void removeFromListMatchingSizeReturnsEmptyList() {
+      assertThat(new Range(0, 1).removeFrom(asList(10, 20)), equalTo(EMPTY_LIST));
+   }
+
+   @Test
+   public void removeSomeFromList() {
+      assertThat(new Range(1, 2).removeFrom(asList(10, 20, 30, 40)), equalTo(asList(10, 40)));
+   }
+}
+
+v13.
+
+We want to add some tests that will document how the code behaves when there's a problem. We start with the case where the end of the range-to-move extends past the list size:
+
+
+   @Test(expected=IllegalArgumentException.class)
+   public void throwWhenRangeEndsPastListSize() {
+      move(asList(10), new Range(0, 1), 0);
+   }
+
+Here we use @Test annotation argument, `expected`, which delcares that we expect an exception to be thown sometime during execution of the test method. If it executes to completion and no IllegalArgumentException gets thrown, the test fails.
+
+Getting the test to pass:
+
+   public static List<Integer> move(List<Integer> input, Range range, int position) {
+      if (range.end + 1 > input.size())
+         throw new IllegalArgumentException();
+      // ...
+   }
+
+v14.
+
+We think of a test:
+
+   @Test
+   public void canInsertAfterLastPosition() {
+      assertThat(move(asList(10, 20, 30), new Range(0, 1), 3), equalTo(asList(30, 10, 20)));
+   }
+
+It should work. It passes! What should we do with the test?
+
+v15.
+
+We think of another error condition:
+
+
+   @Test(expected=IllegalArgumentException.class)
+   public void throwWhenPositionPastListSize() {
+      move(asList(10, 20, 30), new Range(0, 1), 4);
+   }
+
+Adding code directly to move with the level of detail needed makes for distracting code. We extract a helper method with a declarative name:
+
+   public static void throwIfInvalidInput(List<Integer> input, Range range, int position) {
+      if (range.end + 1 > input.size() || position > input.size())
+         throw new IllegalArgumentException();
+   }
+
+   public static List<Integer> move(List<Integer> input, Range range, int position) {
+      throwIfInvalidInput(input, range, position);
+
+      // ...
+   }
+
+v16.
+
+We sometimes need to be able to check the state of things after an exception is thrown. We might also want to check the message that accompanies the exception object:
+
+   @Test
+   public void throwWhenRangeEndsPastListSize() {
+      try {
+         move(asList(10), new Range(0, 1), 0);
+         fail();
+      }
+      catch (IllegalArgumentException expected) {
+         assertThat(expected.getMessage(), equalTo("range end out of bounds"));
+      }
+   }
+
+Later versions of JUnit 4.x (?) provide a rule-based mechanism:
+
+   @Rule
+   public ExpectedException thrown = ExpectedException.none();
+   // ...
+
+   @Test
+   public void throwWhenPositionPastListSize() {
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("position out of bounds");
+
+      move(asList(10, 20, 30), new Range(0, 1), 4);
+   }
+
+We do need to modify the production code a little.
+
+   public static void throwIfInvalidInput(List<Integer> input, Range range, int position) {
+      if (range.end + 1 > input.size())
+         throw new IllegalArgumentException("range end out of bounds");
+      if (position > input.size())
+         throw new IllegalArgumentException("position out of bounds");
+   }
+
+No doubt there are additional error conditions! And, not surprisingly, there are additional ways of checking for exceptions. The above three are among the more common mechanisms.
