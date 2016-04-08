@@ -1,4 +1,4 @@
-v1
+### v1
 
 We start with a simple degenerate case: A move to the same position should do nothing.
 
@@ -26,7 +26,7 @@ public class Reorder {
 
 Writing this test lets us get all the JUnit bits in place and figure out the interface that we want to use. We get our first passing test within a couple minutes.
 
-v2
+### v2
 
 For the second test: In a two-element list, move a single element to the prior position.
 
@@ -53,7 +53,7 @@ public class Reorder {
 
 We also decide to return a new list, as opposed to altering the input list.
 
-v3
+### v3
 
 Faced with this unfriendly line of code in the test:
 
@@ -97,7 +97,7 @@ In the tests, we change both calls to `move` to use the Range:
 
 public static List<Integer> move(List<Integer> input, Range range, int position) {
 
-v4.
+### v4.
 
 Our hardcoded swap of the first and second elements won't hold up if we write another test. We keep our change simple, and write a test that moves the last element in a 4-element input array:
 
@@ -121,7 +121,7 @@ The change forces us to generalize the `move` code:
 
 We use the `remove` method, which returns the element removed at a given position. We subsequently call the `add` method to insert it at the destination `position`.
 
-v5.
+### v5.
 
 Our algorithm works fine for moving an element to an earlier position in the list. However, it doesn't hold up for moving an element to a later position:
 
@@ -171,7 +171,7 @@ Our code is slightly asymmetric. In the `if` block, we store the element to be m
 
 (Note that we pay a slight performance hit for the `if` case. We have no reason to be concerned yet.)
 
-v7.
+### v7.
 
 So far all our tests demonstrate moving a single element. We need to be able to move multiple elements:
 
@@ -211,7 +211,7 @@ Java doesn't provide an immediate, effective means of removing a range from a li
 
 In any case, our code is now a bit messy--the local variable `toMove` is used only in the `else` branch.
 
-v8.
+### v8.
 
 Some restructuring first. We rename `ReorderTest` to `ReorderMoveTest`, and move all our classes into a new package `util`. The new package allows us to use an `import static` on `util.Reorder.move`, which lets us omit the class name from calls to `move`: 
 
@@ -228,7 +228,7 @@ public class Reorder_MoveTest {
    // ...
 }
 
-v9.
+### v9.
 
 We add a new failing test:
 
@@ -255,17 +255,16 @@ We add a new failing test:
 
 Now both legs of the `if` statement require a `rangeToMove`, so we move that statement prior to the `if` statement. We're back to the symmetric solution that we had earlier, except that now both branches of the `if` statement support moving a range of elements.
 
-v10.
+### v10.
 
 We wonder if that guard clause in `move`--which returns early if the position-to-move-to is the same as the start of the range to move--is really necessary. We try eliminating it and discover that indeed all our tests still pass (particularly `moveToSamePositionDoesNothing`).
 
 
-v11.
+### v11.
 
 The beauty of creating abstractions like Range is that we find out often that code can start living there.
 
 We wanted an easy way of removing a range from a List, but Java doesn't provide it directly. If we can't send the message `remove` to a list object, perhaps we can send the message `removeFrom` to a range object and pass a list as an argument--thus, "remove this range from a list."
-
 
    public static List<Integer> move(List<Integer> input, Range range, int position) {
       List<Integer> rangeToMove = input.subList(range.start, range.end + 1);
@@ -292,7 +291,7 @@ public class Range {
    }
 }
 
-v12.
+### v12.
 
 We've taken a private behavior and made it a public behavior defined on the Range class. In order for other developers to be able to rapidly understand and consume--reuse--our newly public ability, we add a couple tests to document its behavior:
 
@@ -316,7 +315,7 @@ public class RangeTest {
    }
 }
 
-v13.
+### v13.
 
 We want to add some tests that will document how the code behaves when there's a problem. We start with the case where the end of the range-to-move extends past the list size:
 
@@ -336,7 +335,7 @@ Getting the test to pass:
       // ...
    }
 
-v14.
+### v14.
 
 We think of a test:
 
@@ -347,10 +346,9 @@ We think of a test:
 
 It should work. It passes! What should we do with the test?
 
-v15.
+### v15.
 
 We think of another error condition:
-
 
    @Test(expected=IllegalArgumentException.class)
    public void throwWhenPositionPastListSize() {
@@ -370,7 +368,7 @@ Adding code directly to move with the level of detail needed makes for distracti
       // ...
    }
 
-v16.
+### v16.
 
 We sometimes need to be able to check the state of things after an exception is thrown. We might also want to check the message that accompanies the exception object:
 
