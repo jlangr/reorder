@@ -191,7 +191,7 @@ We realize that the algorithm in reverse should work. We just need to determine 
    }
 ```
 
-v6.
+### v6.
 
 Our code is slightly asymmetric. In the `if` block, we store the element to be moved, while in the `else` block, we grab the element to be moved inline as part of the `add` method call. We decide to always extract the element to be moved first, which gives us very symmetric code:
 
