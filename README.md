@@ -1,4 +1,4 @@
-This is a run-through of the first part of the Reordering kata from cyber-dojo.org. Here are the instructions from that site, verbatim:
+This is a run-through of the first part of the Reordering kata from [cyber-dojo.org](http://www.cyber-dojo.org/). Here are the instructions from that site, verbatim:
 
 ```
 Given a set of integer numbers your task is to reorder them as follows:
