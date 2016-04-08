@@ -1,7 +1,6 @@
 v1
 
-We start with a simple degenerate case:  ?? def degenerate here
-A move to the same position does nothing.
+We start with a simple degenerate case: A move to the same position should do nothing.
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -15,7 +14,7 @@ public class ReorderTest {
    }
 }
 
-Getting this test to pass is as simple as returning the input list (but begs the question, which we'll leave unanswered for now: Are we to change the list in place, or return a new list?).
+Getting this test to pass is as simple as returning the input list (but begs the question, which we'll leave unanswered for now and decide arbitrarily: Are we to change the list in place, or return a new list?).
 
 import java.util.List;
 
@@ -97,7 +96,6 @@ In the tests, we change both calls to `move` to use the Range:
 ... and correspondingly change the `move` method:
 
 public static List<Integer> move(List<Integer> input, Range range, int position) {
-
 
 v4.
 
@@ -266,7 +264,7 @@ v11.
 
 The beauty of creating abstractions like Range is that we find out often that code can start living there.
 
-We wanted an easy way of removing a range from a List, but Java didn't provide it directly. If we can't send the message `remove` to a list object, perhaps we can send the message `removeFrom` to a range object and pass a list as an argument--thus, "remove this range from a list."
+We wanted an easy way of removing a range from a List, but Java doesn't provide it directly. If we can't send the message `remove` to a list object, perhaps we can send the message `removeFrom` to a range object and pass a list as an argument--thus, "remove this range from a list."
 
 
    public static List<Integer> move(List<Integer> input, Range range, int position) {
