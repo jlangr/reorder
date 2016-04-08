@@ -92,7 +92,7 @@ Faced with this unfriendly line of code in the test:
 
 `assertThat(Reorder.move(asList(1, 2), 1, 1, 0), equalTo(asList(2, 1)));`
 
-... we realize that it's tough to read. We either have to remember that the 2nd and 3rd arguments (1 and 1) represent the start and end of a range. One way to increase clarity in the test is to introduce local variables with intention-revealing names:
+... we realize that it's tough to read. We either have to remember that the 2nd and 3rd arguments (1 and 1) represent the start and end of a range, or we have to poke into the `move` method. One way to increase clarity in the test is to introduce local variables with intention-revealing names:
 
 ```
 int start = 1;
@@ -100,7 +100,7 @@ int end = 1;
 assertThat(Reorder.move(asList(1, 2), start, end, 0), equalTo(asList(2, 1)));
 ```
 
-However, that would bloat all of the tests with similar code. Also, it makes the code more disjoint: You have to read each assignment statement in turn, then correlate the variables referenced in the `act` statement to the local variables.
+However, that would bloat all of the tests with similar code. Also, it makes the code more disjoint: You have to read each assignment statement in turn, then correlate the variables referenced in the `act` statement to the local variables. I prefer the immediacy of a single declarative expression.
 
 We instead recognize that we are missing an abstraction. Any time we see a `start` of a range, we're almost always also going to see an `end` for that range. We introduce a Range abstraction:
 
