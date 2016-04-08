@@ -21,6 +21,8 @@ This implementation uses an ArrayList as the data structure, not a native Java a
 
 The implementation of each iteration (titled *v1*, *v2*, *v3*, etc.) is stored in a separate branch with the corresponding name.
 
+The branch v12 represents one good stopping point. Branches v13 through v16 begin to address some error cases, and could represent another learning segmenet.
+
 ### v1
 
 We start with a simple degenerate case: A move to the same position should do nothing.
